@@ -19,13 +19,11 @@ jobs:
       - name: Set environment variables using $GITHUB_ENV
         run: |
           echo "ECR_REPO=${{ secrets.AWS_ECR_REPO }}" >> $GITHUB_ENV
-          echo "IMAGE_TAG=$(git rev-parse --short HEAD)-$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
           echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
 
       - name: Validate environment variables
         run: |
           echo "ECR_REPO: $ECR_REPO"
-          echo "IMAGE_TAG: $IMAGE_TAG"
           echo "AWS_REGION: $AWS_REGION"
       
 
@@ -47,9 +45,9 @@ jobs:
 
       - name: Tag docker image
         run: |
-          docker tag $AWS_ECR_REPO:$IMAGE_TAG $AWS_ECR_REPO:$latest
+          docker tag branchstock-api_service:latest $ECR_REPO:$latest
 
       - name: Push docker image
         run: |
-          docker push $AWS_ECR_REPO:$IMAGE_TAG
-          docker push $AWS_ECR_REPO:latest
+          docker push branchstock-api_service:latest
+          docker push $ECR_REPO:latest
