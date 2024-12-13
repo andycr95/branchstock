@@ -1,1 +1,68 @@
+name: App Develop Push
 
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    if: github.event.pull_request.head.ref == 'main'
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set environment variables using $GITHUB_ENV
+        run: |
+          echo "ECR_REPO=${{ secrets.AWS_ECR_REPO }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$(git rev-parse --short HEAD)-$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
+          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
+
+      - name: Validate environment variables
+        run: |
+          echo "ECR_REPO: $ECR_REPO"
+          echo "IMAGE_TAG: $IMAGE_TAG"
+          echo "AWS_REGION: $AWS_REGION"
+
+      - name: Make Maven Wrapper executable
+        run: |
+          chmod +x mvnw
+
+      - name: Build the application
+        run: |
+          ./mvnw clean package -DskipTests
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build docker image
+        run: |
+          docker build -t $ECR_REPO:$IMAGE_TAG .
+
+      - name: Tag docker image
+        run: |
+          docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:$latest
+
+      - name: Push docker image
+        run: |
+          docker push $ECR_REPO:$IMAGE_TAG
+          docker push $ECR_REPO:latest
+
+      - name: Create a new release
+        uses: actions/create-release@v3
+        with:
+          tag_name: ${{ env.IMAGE_TAG }}
+          release_name: Release ${{ env.IMAGE_TAG }}
+          draft: false
+          prerelease: false
