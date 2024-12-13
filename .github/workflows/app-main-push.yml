@@ -45,6 +45,10 @@ jobs:
         with:
           compose-file: "./docker-compose.yml"
 
+      - name: Tag docker image
+        run: |
+          docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:$latest
+
       - name: Push docker image
         run: |
           docker push $ECR_REPO:$IMAGE_TAG
