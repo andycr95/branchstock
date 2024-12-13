@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  mysqldb:
+    image: "mysql:8.0.33"
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    networks:
+      - springapimysql-net  
+    environment:
+      MYSQL_DATABASE: branch_stock
+      MYSQL_ROOT_PASSWORD: password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/1.sql
+
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - springapimysql-net
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    volumes:
+      - .m2:/root/.m2
+
+networks:
+  springapimysql-net:
+
+volumes:
+  mysql-data:
+
+
+
+
+
