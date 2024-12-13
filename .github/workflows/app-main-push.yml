@@ -57,11 +57,3 @@ jobs:
         run: |
           docker push $ECR_REPO:$IMAGE_TAG
           docker push $ECR_REPO:latest
-
-      - name: Create a new release
-        uses: actions/create-release@v3
-        with:
-          tag_name: ${{ env.IMAGE_TAG }}
-          release_name: Release ${{ env.IMAGE_TAG }}
-          draft: false
-          prerelease: false
