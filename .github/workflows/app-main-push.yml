@@ -1,13 +1,12 @@
 name: App Develop Push
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
 jobs:
   build:
-    if: github.event.pull_request.head.ref == 'main'
     name: Build
     runs-on: ubuntu-latest
     steps:
