@@ -41,3 +41,27 @@ Esto construirá la imagen de la aplicación y la ejecutará junto con una insta
 ## Documentación API (Swagger)
 La documentación de la API generada con Swagger está disponible en: http://localhost:8080/docs).
 
+## Endpoints
+
+### Franquicias
+* GET `/franchises`: Obtener todas las franquicias.
+* GET `/franchises/{id}`: Obtener una franquicia por su ID.
+* POST `/franchises`: Crear una nueva franquicia.
+* PUT `/franchises/{id}`: Actualizar una franquicia existente.
+* GET `/franchises/branches`: Obtener todas las franquicias con sus sucursales.
+* GET `/franchises/{id}/products_stock`: Obtener los productos con mas stock de cada sucursal de una franquicia.
+
+### Sucursales
+* GET `/branches`: Obtener todas las sucursales.
+* GET `/branches/{id}`: Obtener una sucursal por su ID.
+* POST `/branches`: Crear una nueva sucursal.
+* PUT `/branches/{id}`: Actualizar una sucursal existente.
+* GET `/branches/products`: Obtener todos los productos de todas las sucursales.
+
+### Productos
+* GET `/products/branches`: Obtener todos los productos de todas las sucursales.
+* POST `/products`: Crear un nuevo producto.
+* PUT `/products/{id}`: Actualizar un producto existente.
+* PUT `/products/{id}/stock`: Actualizar el stock de un producto existente.
+* DELETE `/products/{id}`: Eliminar un producto existente.
+
