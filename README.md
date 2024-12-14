@@ -22,6 +22,11 @@ Branchstock es un sistema para gestionar inventario, construido con Spring Boot,
 * Tener Java instalado.
 * Tener Mysql instalado y en ejecución en tu máquina. Asegúrate de que la configuración de conexión en application.properties apunte a tu instancia local de Mysql.
 
+## Ejecución en AWS
+
+Este proyecto se ejecuta en AWS ECS, todo el proceso de despliegue se encuentra en el archivo `main.tf` en la carpeta `terraform`.
+
+
 ### Clonar el repositorio:
 git clone <url_del_repositorio>
 
