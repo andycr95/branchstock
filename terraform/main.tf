@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "branch_stock_task" {
-  family                   = "branch_stock_task" # Name your task
+  family                   = "branch_stock_task"
   container_definitions    = <<DEFINITION
   [
     {
